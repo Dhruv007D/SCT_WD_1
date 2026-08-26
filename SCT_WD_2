@@ -1,0 +1,131 @@
+Create an interactive and user-friendly stopwatch web application. 
+Implement functions for starting, pausing, and resetting the stopwatch, as well as tracking and displaying lap times, users can accurately measure and record time intervals. 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background: #f4f4f9;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #display {
+      font-size: 3em;
+      margin: 20px 0;
+      color: #222;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #ddd;
+    }
+
+    #laps {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #laps li {
+      background: #fff;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏱ Stopwatch</h1>
+  <div id="display">00:00:00</div>
+
+  <button onclick="startStop()">Start</button>
+  <button onclick="pause()">Pause</button>
+  <button onclick="reset()">Reset</button>
+  <button onclick="lap()">Lap</button>
+
+  <ul id="laps"></ul>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+    let running = false;
+
+    function timeToString(time) {
+      let diffInHrs = time / 3600000;
+      let hh = Math.floor(diffInHrs);
+
+      let diffInMin = (diffInHrs - hh) * 60;
+      let mm = Math.floor(diffInMin);
+
+      let diffInSec = (diffInMin - mm) * 60;
+      let ss = Math.floor(diffInSec);
+
+      let formattedHH = hh.toString().padStart(2, "0");
+      let formattedMM = mm.toString().padStart(2, "0");
+      let formattedSS = ss.toString().padStart(2, "0");
+
+      return `${formattedHH}:${formattedMM}:${formattedSS}`;
+    }
+
+    function startStop() {
+      if (!running) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          document.getElementById("display").innerHTML = timeToString(elapsedTime);
+        }, 1000);
+        running = true;
+      }
+    }
+
+    function pause() {
+      if (running) {
+        clearInterval(timerInterval);
+        running = false;
+      }
+    }
+
+    function reset() {
+      clearInterval(timerInterval);
+      document.getElementById("display").innerHTML = "00:00:00";
+      elapsedTime = 0;
+      running = false;
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+      if (running) {
+        let lapTime = timeToString(elapsedTime);
+        let li = document.createElement("li");
+        li.innerText = lapTime;
+        document.getElementById("laps").appendChild(li);
+      }
+    }
+  </script>
+
+</body>
+</html>
