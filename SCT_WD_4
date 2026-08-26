@@ -1,0 +1,148 @@
+Develop a basic to-do app that enables a user to add maintain tasks.
+Allow users to add/organize items in lists. Mark them Completed, Edit them, Set Date & TIme of tasks
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 20px;
+      text-align: center;
+    }
+
+    #app {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      cursor: pointer;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f9f9f9;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li.completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .task-actions button {
+      margin-left: 5px;
+      background: #28a745;
+    }
+
+    .task-actions button.edit {
+      background: #ffc107;
+    }
+
+    .task-actions button.delete {
+      background: #dc3545;
+    }
+
+    .task-actions button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <h1>📝 To-Do App</h1>
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <input type="datetime-local" id="taskDateTime">
+    <button onclick="addTask()">Add Task</button>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    function addTask() {
+      const taskText = document.getElementById("taskInput").value.trim();
+      const taskDateTime = document.getElementById("taskDateTime").value;
+
+      if (taskText === "") return;
+
+      const task = {
+        text: taskText,
+        dateTime: taskDateTime,
+        completed: false
+      };
+
+      tasks.push(task);
+      document.getElementById("taskInput").value = "";
+      document.getElementById("taskDateTime").value = "";
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = task.completed ? "completed" : "";
+
+        li.innerHTML = `
+          <span>${task.text} ${task.dateTime ? "📅 " + task.dateTime : ""}</span>
+          <div class="task-actions">
+            <button onclick="toggleComplete(${index})">✔</button>
+            <button class="edit" onclick="editTask(${index})">✏</button>
+            <button class="delete" onclick="deleteTask(${index})">🗑</button>
+          </div>
+        `;
+
+        taskList.appendChild(li);
+      });
+    }
+
+    function toggleComplete(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTasks();
+    }
+
+    function editTask(index) {
+      const newText = prompt("Edit task:", tasks[index].text);
+      const newDateTime = prompt("Edit date & time:", tasks[index].
